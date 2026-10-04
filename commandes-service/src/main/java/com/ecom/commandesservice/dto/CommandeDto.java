@@ -3,6 +3,8 @@ package com.ecom.commandesservice.dto;
 import lombok.Value;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import com.ecom.commandesservice.enums.StatutCommande;
 import java.util.Date;
 
 /**
@@ -14,6 +16,6 @@ public class CommandeDto implements Serializable {
     String idempotencyKey;
     Long clientId;
     Date dateCommande;
-    double prixTotal;
-    String statut;
+    BigDecimal prixTotal;
+    StatutCommande statut;
 }

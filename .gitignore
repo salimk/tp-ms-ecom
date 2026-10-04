@@ -31,3 +31,19 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Fichiers locaux ###
+*.log
+*.mv.db
+*.trace.db
+.env
+.env.*
+!.env.example
+application-local.properties
+application-local.yml
+application-local.yaml
+
+### Notes enseignant ###
+/PREPARATION-TP2.md
+/readmeia.md
+/README.md

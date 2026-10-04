@@ -1,6 +1,7 @@
 package com.ecom.catalogueservice.entite;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "produit")
@@ -12,13 +13,14 @@ public class Produit {
     private String nom;
     private String description;
     private String sku;
-    private double prix;
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal prix = BigDecimal.ZERO;
     private int qteStock;
 
     public Produit() {
     }
 
-    public Produit(Long id, String description, String nom, String sku,double prix,int qteStock) {
+    public Produit(Long id, String nom, String description, String sku,BigDecimal prix,int qteStock) {
         this.id = id;
         this.prix = prix;
         this.sku = sku;
@@ -52,11 +54,11 @@ public class Produit {
         this.sku = sku;
     }
 
-    public double getPrix() {
+    public BigDecimal getPrix() {
         return prix;
     }
 
-    public void setPrix(double prix) {
+    public void setPrix(BigDecimal prix) {
         this.prix = prix;
     }
 

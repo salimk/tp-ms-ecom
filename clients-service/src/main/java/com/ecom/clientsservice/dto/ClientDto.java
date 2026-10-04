@@ -1,5 +1,14 @@
 package com.ecom.clientsservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -8,12 +17,22 @@ import java.util.Objects;
  */
 public class ClientDto implements Serializable {
     private final Long id;
+    @NotBlank
+    @Size(max = 255)
     private final String name;
+    @NotBlank
+    @Email
+    @Size(max = 255)
     private final String email;
-    private final int etat;
+    @Min(0)
+    @Max(2)
+    @NotNull
+    private final Integer etat;
 
 
-    public ClientDto(Long id, String name, String email, int etat) {
+    @JsonCreator
+    public ClientDto(@JsonProperty("id") Long id, @JsonProperty("name") String name,
+                     @JsonProperty("email") String email, @JsonProperty("etat") Integer etat) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -57,7 +76,7 @@ public class ClientDto implements Serializable {
                 "email = " + email + ")";
     }
 
-    public int getEtat() {
+    public Integer getEtat() {
         return etat;
     }
 }

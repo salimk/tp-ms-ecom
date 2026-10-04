@@ -23,6 +23,9 @@ public interface CommandeMapper {
 
     @AfterMapping
     default void linkLignesCommande(@MappingTarget Commande commande) {
+        if (commande.getLignesCommande() == null) {
+            return;
+        }
         commande.getLignesCommande().forEach(lignesCommande -> lignesCommande.setCommande(commande));
     }
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

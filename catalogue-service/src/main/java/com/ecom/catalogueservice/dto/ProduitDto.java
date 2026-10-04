@@ -1,6 +1,15 @@
 package com.ecom.catalogueservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.PositiveOrZero;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -8,13 +17,26 @@ import java.util.Objects;
  */
 public class ProduitDto implements Serializable {
     private final Long id;
+    @NotBlank
+    @Size(max = 255)
     private final String nom;
+    @Size(max = 255)
     private final String description;
+    @NotBlank
+    @Size(max = 255)
     private final String sku;
-    private final double prix;
-    private final int qteStock;
+    @PositiveOrZero
+    @NotNull
+    @Digits(integer = 17, fraction = 2)
+    private final BigDecimal prix;
+    @PositiveOrZero
+    @NotNull
+    private final Integer qteStock;
 
-    public ProduitDto(Long id, String nom, String description, String sku, double prix, int qteStock) {
+    @JsonCreator
+    public ProduitDto(@JsonProperty("id") Long id, @JsonProperty("nom") String nom,
+                      @JsonProperty("description") String description, @JsonProperty("sku") String sku,
+                      @JsonProperty("prix") BigDecimal prix, @JsonProperty("qteStock") Integer qteStock) {
         this.id = id;
         this.nom = nom;
         this.description = description;
@@ -39,11 +61,11 @@ public class ProduitDto implements Serializable {
         return sku;
     }
 
-    public double getPrix() {
+    public BigDecimal getPrix() {
         return prix;
     }
 
-    public int getQteStock() {
+    public Integer getQteStock() {
         return qteStock;
     }
 

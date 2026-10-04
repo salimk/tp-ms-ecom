@@ -12,6 +12,9 @@ public interface CommandeMapperDetail {
 
     @AfterMapping
     default void linkListligneCommande(@MappingTarget Commande commande) {
+        if (commande.getLignesCommande() == null) {
+            return;
+        }
         commande.getLignesCommande().forEach(ligneCommande -> ligneCommande.setCommande(commande));
     }
 
