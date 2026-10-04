@@ -1,0 +1,15 @@
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Apple iPhone 14 Pro', 'Smartphone 6,1″ OLED, puce A16 Bionic, 128 Go, couleur Graphite', 'SKU-APL-IPH14P-128G-GR', 1199.00,0);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Samsung Galaxy S23 Ultra', 'Smartphone 6,8″ AMOLED, puce Snapdragon 8 Gen 2, 256 Go, couleur Phantom Black', 'SKU-SSG-GS23U-256G-PB', 1299.99,0);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Dell XPS 13', 'Ultrabook 13,4″ FHD+, Intel Core i7-1250U, 16 Go RAM, 512 Go SSD, Argent', 'SKU-DEL-XPS13-I7-16-512', 1499.50,1);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Sony WH-1000XM5', 'Casque audio Bluetooth à réduction de bruit, autonomie 30h, noir', 'SKU-SNY-WH1000XM5-BK', 379.00,1);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Apple Watch Series 8', 'Montre connectée, boîtier 45 mm aluminium, GPS, bracelet Sport rouge', 'SKU-APL-AW8-45-RED', 429.00,25);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Logitech MX Master 3', 'Souris sans fil ergonomique, capteur 4000 DPI, design ambidextre, graphite', 'SKU-LOG-MX3-GR', 99.99,40);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('LG UltraFine 27MD5KL', 'Écran 27″ 5K IPS, HDR600, Thunderbolt 3, argent', 'SKU-LG-27MD5KL-5K', 1299.00,5);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Microsoft Surface Pro 9', '2-en-1 PC 13″ PixelSense, Intel Core i5-1235U, 8 Go RAM, 256 Go SSD, Platine', 'SKU-MSR-SP9-I5-8-256-PL', 1149.00,3);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Google Pixel 7 Pro', 'Smartphone 6,7″ AMOLED, puce Google Tensor G2, 128 Go, couleur Snow', 'SKU-GGL-PX7P-128G-SN', 899.00,30);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Bose QuietComfort Earbuds II', 'Écouteurs true wireless à réduction de bruit, autonomie 6h, noir', 'SKU-BOS-QCEBII-BK', 299.00,20);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('NVIDIA GeForce RTX 4080', 'Carte graphique 16 Go GDDR6X, Ray Tracing, DLSS 3.0', 'SKU-NVI-RTX4080-16G', 1199.99,10);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Samsung T7 Portable SSD', 'Disque SSD externe 1 To USB-C, jusqu’à 1050 Mo/s, bleu', 'SKU-SSG-T7SSD-1T-BL', 159.99,40);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Razer Blade 15', 'PC Gamer 15,6″ QHD 240 Hz, Intel Core i7-12800H, RTX 3070 Ti, 16 Go RAM, 1 To SSD', 'SKU-RAZ-BLADE15-I7-16-1T-3070T', 2199.00,1);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Fitbit Charge 5', 'Tracker d’activité GPS intégré, écran AMOLED couleur, autonomie 7 jours, noir acier', 'SKU-FIT-CHG5-BSB', 179.95,10);
+INSERT INTO produit (nom, description, sku, prix, qte_stock) VALUES ('Amazon Echo Dot (5e génération)', 'Enceinte intelligente avec Alexa, tissu glacier, contrôle vocal', 'SKU-AMZ-ECHOD5-GL', 59.99,10);
