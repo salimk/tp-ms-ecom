@@ -12,5 +12,7 @@
         <module>clients-service</module>
         <module>catalogue-service</module>
         <module>commandes-service</module>
+        <module>service-registry</module>
+        <module>gateway</module>
     </modules>
 </project>
