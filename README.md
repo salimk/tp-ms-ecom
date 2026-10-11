@@ -8,7 +8,6 @@ Il sert de base aux travaux pratiques sur l’infrastructure Spring Cloud, les c
 
 La version initiale utilise Java 17, Spring Boot, Maven et des bases H2 en mémoire alimentées automatiquement au démarrage.
 
-Le [TP 2 — Jalon V1](TP2-INSTRUCTIONS-ETUDIANTS.md) porte sur le registre Eureka, le routage dynamique puis statique avec Spring Cloud Gateway, et l'observation des services et des routes avec Actuator. Les manipulations sont décrites dans IntelliJ IDEA.
 ## Diagramme de classes
 ![diagramme-class.png](diagramme-class.png)
 
