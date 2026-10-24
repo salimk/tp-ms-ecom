@@ -1,10 +1,12 @@
 package com.ecom.commandesservice.service;
 
+import com.ecom.commandesservice.dto.CommandeDto;
+import com.ecom.commandesservice.dto.CommandeDtoDetail;
+import com.ecom.commandesservice.dto.CommandeDtoFull;
 import com.ecom.commandesservice.entite.Commande;
 import com.ecom.commandesservice.entite.LigneCommande;
 import com.ecom.commandesservice.repository.CommandeRepository;
 import com.ecom.commandesservice.exception.RessourceIntrouvableException;
-import com.ecom.commandesservice.exception.CreationCommandeNonDisponibleException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -33,13 +35,13 @@ public class CommandeService {
         return commandeRepository.findById(id)
                 .orElseThrow(() -> new RessourceIntrouvableException("Commande introuvable"));
     }
-
-    public Commande ajouterCommande(Commande commande) {
-        return commandeRepository.save(commande);
+    public CommandeDtoFull getCommandeFullById(Long id) {
+        Commande commande = commandeRepository.findById(id)
+                .orElseThrow(() -> new RessourceIntrouvableException("Commande introuvable"));
+        throw new IllegalArgumentException();
     }
 
-    // TODO TP Feign : valider le client, vérifier les produits et calculer les prix.
     public Commande createCommande(Commande commande, String idempotencyKey) {
-        throw new CreationCommandeNonDisponibleException();
+        throw new IllegalArgumentException();
     }
 }

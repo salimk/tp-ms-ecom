@@ -2,6 +2,7 @@ package com.ecom.commandesservice.controller;
 
 import com.ecom.commandesservice.dto.CommandeDto;
 import com.ecom.commandesservice.dto.CommandeDtoDetail;
+import com.ecom.commandesservice.dto.CommandeDtoFull;
 import com.ecom.commandesservice.dto.CreateCommandeDto;
 import com.ecom.commandesservice.entite.Commande;
 import com.ecom.commandesservice.mapper.CommandeMapper;
@@ -32,29 +33,31 @@ public class CommandeController {
         this.commandeMapperDetail = commandeMapperDetail;
     }
 
-
-@PostMapping("/new")
-public ResponseEntity<CommandeDtoDetail> createCommande(@Valid @RequestBody CreateCommandeDto createCommandeDto,
-                                        @NotBlank @Size(max = 255) @RequestHeader(name="idempotencyKey") String idempotency ){
-        Commande commande = commandeService.createCommande(commandeMapper.toEntity(createCommandeDto),idempotency);
-        return ResponseEntity.status(HttpStatus.CREATED).body(commandeMapperDetail.toDto(commande));
-}
-
     @GetMapping
     public ResponseEntity<List<CommandeDto>> getlistCommandes(){
         return ResponseEntity.ok(commandeService.listallCommande().stream().map(commandeMapper::toDto).toList());
     }
+    // Ajouter une nouvelle commande
+    @PostMapping("/new")
+    public ResponseEntity<CommandeDtoDetail> createCommande(@Valid @RequestBody CreateCommandeDto createCommandeDto,
+                                            @NotBlank @Size(max = 255) @RequestHeader(name="idempotencyKey") String idempotency ){
+            Commande commande = commandeService.createCommande(commandeMapper.toEntity(createCommandeDto),idempotency);
+            return ResponseEntity.status(HttpStatus.CREATED).body(commandeMapperDetail.toDto(commande));
+    }
 
+    //Récupérer une commande par son id y inclure les lignes de commande (que les références client et produits)
     @GetMapping("/{id}")
     public ResponseEntity<CommandeDtoDetail> getCommandeById(@PathVariable Long id){
-        Commande commande = commandeService.getCommandeById(id);
-        return ResponseEntity.ok(commandeMapperDetail.toDto(commande));
+        CommandeDtoDetail commandeDtoDetail = commandeMapperDetail.toDto(commandeService.getCommandeById(id));
+        return ResponseEntity.ok(commandeDtoDetail);
+    }
+    //Récupérer une commande par son id y inclure les lignes de commande les details du client et details des produits
+    @GetMapping("/{id}/detail")
+    public ResponseEntity<CommandeDtoFull> getCommandeRichById(@PathVariable Long id){
+        CommandeDtoFull commandeDtoFull= commandeService.getCommandeFullById(id);
+        return ResponseEntity.ok(commandeDtoFull);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> donneesInvalides(ConstraintViolationException exception) {
-        return ResponseEntity.badRequest().body("Données invalides");
-    }
 
 
 }
