@@ -1,7 +1,7 @@
 package com.ecom.commandesservice.dto;
 
 import com.ecom.commandesservice.enums.StatutCommande;
-import lombok.Value;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * DTO for {@link com.ecom.commandesservice.entite.Commande}
  */
-@Value
+@Data
 public class CommandeDtoFull implements Serializable {
     Long id;
     Long clientId;

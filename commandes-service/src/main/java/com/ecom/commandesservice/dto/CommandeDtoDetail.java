@@ -1,10 +1,10 @@
 package com.ecom.commandesservice.dto;
 
+import com.ecom.commandesservice.enums.StatutCommande;
 import lombok.Value;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import com.ecom.commandesservice.enums.StatutCommande;
 import java.util.Date;
 import java.util.List;
 

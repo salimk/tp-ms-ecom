@@ -40,9 +40,9 @@ public class CommandeController {
     // Ajouter une nouvelle commande
     @PostMapping("/new")
     public ResponseEntity<CommandeDtoDetail> createCommande(@Valid @RequestBody CreateCommandeDto createCommandeDto,
-                                            @NotBlank @Size(max = 255) @RequestHeader(name="idempotencyKey") String idempotency ){
-            Commande commande = commandeService.createCommande(commandeMapper.toEntity(createCommandeDto),idempotency);
-            return ResponseEntity.status(HttpStatus.CREATED).body(commandeMapperDetail.toDto(commande));
+                                                            @NotBlank @Size(max = 255) @RequestHeader(name="idempotencyKey") String idempotency ){
+        Commande commande = commandeService.createCommande(commandeMapper.toEntity(createCommandeDto),idempotency);
+        return ResponseEntity.status(HttpStatus.CREATED).body(commandeMapperDetail.toDto(commande));
     }
 
     //Récupérer une commande par son id y inclure les lignes de commande (que les références client et produits)

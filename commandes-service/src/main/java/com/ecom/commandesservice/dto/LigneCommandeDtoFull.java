@@ -1,6 +1,6 @@
 package com.ecom.commandesservice.dto;
 
-import lombok.Value;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 /**
  * DTO for {@link com.ecom.commandesservice.entite.LigneCommande}
  */
-@Value
+@Data
 public class LigneCommandeDtoFull implements Serializable {
     Long id;
     Long produitId;
