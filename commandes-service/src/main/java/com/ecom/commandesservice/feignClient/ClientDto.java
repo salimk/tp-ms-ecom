@@ -7,9 +7,7 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * DTO for {@link com.ecom.clientsservice.entite.Client}
- */
+
 public class ClientDto implements Serializable {
     private final Long id;
     @NotBlank

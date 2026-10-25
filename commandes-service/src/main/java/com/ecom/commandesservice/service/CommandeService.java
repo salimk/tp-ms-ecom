@@ -35,13 +35,6 @@ public class CommandeService {
         this.commandeMapperDetailFull = commandeMapperDetailFull;
     }
 
-    @Transactional
-    public void ajouterligneCommande(Commande commande, LigneCommande ligneCommande) {
-        ligneCommande.setCommande(commande);
-        commande.getLignesCommande().add(ligneCommande);
-        commandeRepository.save(commande);
-    }
-
     public List<Commande> listallCommande() {
         return commandeRepository.findAll();
     }

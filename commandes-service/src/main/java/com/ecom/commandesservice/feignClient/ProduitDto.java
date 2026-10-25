@@ -8,9 +8,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-/**
- * DTO for {@link com.ecom.catalogueservice.entite.Produit}
- */
 public class ProduitDto implements Serializable {
     private final Long id;
     @NotBlank

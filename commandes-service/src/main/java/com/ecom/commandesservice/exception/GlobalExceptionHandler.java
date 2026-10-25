@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> notFound(
             FeignException.NotFound ex) {
         return ResponseEntity.status(404)
-                .body("Ressource externe introuvable");
+                .body("Ressource externe introuvable"+ex.getMessage());
     }
 
     @ExceptionHandler(FeignException.class)

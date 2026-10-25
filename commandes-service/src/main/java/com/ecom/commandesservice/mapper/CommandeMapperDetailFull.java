@@ -8,11 +8,6 @@ import org.mapstruct.*;
 uses={LigneCommandeMapperFull.class})
 
 public interface CommandeMapperDetailFull {
-    @AfterMapping
-    default void linkListligneCommande(@MappingTarget Commande commande) {
-        if (commande.getLignesCommande() == null) {return;}
-        commande.getLignesCommande().forEach(ligneCommande -> ligneCommande.setCommande(commande));
-    }
     @Mapping(target = "clientName", ignore = true)
     @Mapping(target = "clientEmail", ignore = true)
     CommandeDtoFull toDto(Commande commande);
