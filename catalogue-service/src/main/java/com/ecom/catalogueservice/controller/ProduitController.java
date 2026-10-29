@@ -55,9 +55,8 @@ public class ProduitController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/stock/reserver")
-    public ResponseEntity<ProduitDto> reserverStock(@PathVariable Long id,
-                                                   @Valid @RequestBody ReservationStockDto reservation) {
-        return ResponseEntity.ok(produitMapper.toDto(produitService.reserverStock(id, reservation.getQuantite())));
+    @PostMapping("/updatestock")
+    public ResponseEntity<?> reserverStock(@Valid @RequestBody ReservationStockDto reservation) {
+        return ResponseEntity.ok(produitService.reserverStock(reservation.getListeProduitIdQuantite()));
     }
 }

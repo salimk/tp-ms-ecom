@@ -1,19 +1,13 @@
 package com.ecom.catalogueservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Positive;
+import lombok.Data;
 
+
+import java.util.Map;
+
+@Data
 public class ReservationStockDto {
-    @Positive
-    private final int quantite;
+    private final Map<Long, Integer> listeProduitIdQuantite;
 
-    @JsonCreator
-    public ReservationStockDto(@JsonProperty("quantite") int quantite) {
-        this.quantite = quantite;
-    }
-
-    public int getQuantite() {
-        return quantite;
-    }
 }

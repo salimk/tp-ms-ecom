@@ -4,11 +4,14 @@ import com.ecom.catalogueservice.entite.Produit;
 import com.ecom.catalogueservice.repository.ProduitRepository;
 import com.ecom.catalogueservice.exception.DonneesInvalidesException;
 import com.ecom.catalogueservice.exception.StockInsuffisantException;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import com.ecom.catalogueservice.exception.RessourceIntrouvableException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProduitService {
@@ -33,7 +36,7 @@ public class ProduitService {
 
     @Transactional
     public Produit modifierProduit(Long id, Produit nouveauProduit) {
-        Produit produit = getProduitPourModification(id);
+        Produit produit = produitRepository.findById(id).orElseThrow(() -> new RessourceIntrouvableException("Produit introuvable"));
         produit.setNom(nouveauProduit.getNom());
         produit.setDescription(nouveauProduit.getDescription());
         produit.setSku(nouveauProduit.getSku());
@@ -44,24 +47,23 @@ public class ProduitService {
 
     @Transactional
     public void supprimerProduit(Long id) {
-        produitRepository.delete(getProduitPourModification(id));
+        produitRepository.deleteById(id);
     }
 
     @Transactional
-    public Produit reserverStock(Long id, int quantite) {
-        if (quantite <= 0) {
-            throw new DonneesInvalidesException("La quantité doit être positive");
+    public ResponseEntity reserverStock(Map<Long, Integer> listeProduitIdQuantite) {
+        for(Map.Entry<Long, Integer> entry : listeProduitIdQuantite.entrySet()) {
+            Long id=entry.getKey();
+            int quantite=entry.getValue();
+            if (quantite <= 0) {
+                throw new DonneesInvalidesException("La quantité doit être positive");
+            }
+            Produit produit = produitRepository.findById(id).orElseThrow(() -> new RessourceIntrouvableException("Produit introuvable"));
+            if (produit.getQteStock() < quantite) {
+                throw new StockInsuffisantException();
+            }
+            produit.setQteStock(produit.getQteStock() - quantite);
         }
-        Produit produit = getProduitPourModification(id);
-        if (produit.getQteStock() < quantite) {
-            throw new StockInsuffisantException();
-        }
-        produit.setQteStock(produit.getQteStock() - quantite);
-        return produitRepository.save(produit);
-    }
-
-    private Produit getProduitPourModification(Long id) {
-        return produitRepository.findProduitPourModification(id)
-                .orElseThrow(() -> new RessourceIntrouvableException("Produit introuvable"));
+        return ResponseEntity.status(204).build();
     }
 }
