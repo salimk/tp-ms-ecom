@@ -33,4 +33,11 @@ public class GlobalExceptionHandler {
                 .body("Erreur HTTP du service distant : " + ex.status());
     }
 
+    @ExceptionHandler(org.springframework.amqp.AmqpException.class)
+    public ResponseEntity<String> rabbit(
+            org.springframework.amqp.AmqpException ex) {
+        return ResponseEntity.status(503)
+                .body("Impossible de transmettre la demande de notification");
+    }
+
 }

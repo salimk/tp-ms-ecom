@@ -2,13 +2,16 @@ package com.ecom.commandesservice.service;
 
 import com.ecom.commandesservice.dto.CommandeDtoFull;
 import com.ecom.commandesservice.dto.LigneCommandeDtoFull;
+import com.ecom.commandesservice.dto.NotificationEmailDto;
 import com.ecom.commandesservice.entite.Commande;
 import com.ecom.commandesservice.entite.LigneCommande;
 import com.ecom.commandesservice.enums.StatutCommande;
 import com.ecom.commandesservice.exception.RessourceIntrouvableException;
 import com.ecom.commandesservice.feignClient.*;
 import com.ecom.commandesservice.mapper.CommandeMapperDetailFull;
+import com.ecom.commandesservice.messaging.NotificationPublisher;
 import com.ecom.commandesservice.repository.CommandeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -23,13 +26,15 @@ public class CommandeService {
     private final ClientsRequest clientsRequest;
     private final ProduitRequest produitRequest;
     private final CommandeMapperDetailFull commandeMapperDetailFull;
+    private final NotificationPublisher notificationPublisher;
 
 
-    public CommandeService(CommandeRepository commandeRepository, ClientsRequest clientsRequest, ProduitRequest produitRequest, CommandeMapperDetailFull commandeMapperDetailFull) {
+    public CommandeService(CommandeRepository commandeRepository, ClientsRequest clientsRequest, ProduitRequest produitRequest, CommandeMapperDetailFull commandeMapperDetailFull,NotificationPublisher notificationPublisher) {
         this.commandeRepository = commandeRepository;
         this.clientsRequest = clientsRequest;
         this.produitRequest = produitRequest;
         this.commandeMapperDetailFull = commandeMapperDetailFull;
+        this.notificationPublisher = notificationPublisher;
     }
 
     public List<Commande> listallCommande() {
@@ -99,7 +104,19 @@ public class CommandeService {
         commande.setDateCommande(new Date());
         commande.setStatut(StatutCommande.EN_ATTENTE);
         ReservationStockDto reservation = new ReservationStockDto(listeProduitIdQuantite);
+        NotificationEmailDto emailDto = new NotificationEmailDto(
+                client.getEmail(),
+                "Commande n° " + commande.getId() + " enregistrée",
+                "Bonjour " + client.getName()
+                        + ", votre commande n° " + commande.getId()
+                        + " a été enregistrée. Montant : "
+                        + commande.getPrixTotal() + "."
+        );
+
+
         afterCommit(() -> produitRequest.updatestock(reservation));
+        afterCommit(() -> notificationPublisher.envoyer(emailDto));
+
         return  commandeRepository.save(commande);
     }
 
