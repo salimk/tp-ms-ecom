@@ -103,21 +103,22 @@ public class CommandeService {
         commande.setPrixTotal(prixTotal);
         commande.setDateCommande(new Date());
         commande.setStatut(StatutCommande.EN_ATTENTE);
-        ReservationStockDto reservation = new ReservationStockDto(listeProduitIdQuantite);
+        Commande savedccommande=commandeRepository.save(commande);
+
         NotificationEmailDto emailDto = new NotificationEmailDto(
                 client.getEmail(),
-                "Commande n° " + commande.getId() + " enregistrée",
+                "Commande n° " + savedccommande.getId() + " enregistrée",
                 "Bonjour " + client.getName()
-                        + ", votre commande n° " + commande.getId()
+                        + ", votre commande n° " + savedccommande.getId()
                         + " a été enregistrée. Montant : "
-                        + commande.getPrixTotal() + "."
+                        + savedccommande.getPrixTotal() + "."
         );
 
-
+        ReservationStockDto reservation = new ReservationStockDto(listeProduitIdQuantite);
         afterCommit(() -> produitRequest.updatestock(reservation));
         afterCommit(() -> notificationPublisher.envoyer(emailDto));
 
-        return  commandeRepository.save(commande);
+        return savedccommande;
     }
 
     private void afterCommit(Runnable action) {
