@@ -12,6 +12,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
+    @ExceptionHandler(ServiceExterneIndisponibleException.class)
+    public ResponseEntity<String> serviceExterneIndisponible(ServiceExterneIndisponibleException ex) {
+        return ResponseEntity.status(503).body(ex.getMessage());
+    }
+
     @ExceptionHandler(FeignException.NotFound.class)
     public ResponseEntity<String> notFound(
             FeignException.NotFound ex) {

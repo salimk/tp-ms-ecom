@@ -11,6 +11,8 @@ import com.ecom.commandesservice.feignClient.*;
 import com.ecom.commandesservice.mapper.CommandeMapperDetailFull;
 import com.ecom.commandesservice.messaging.NotificationPublisher;
 import com.ecom.commandesservice.repository.CommandeRepository;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,15 +25,18 @@ import java.util.*;
 @Service
 public class CommandeService {
     private final CommandeRepository commandeRepository;
-    private final ClientsRequest clientsRequest;
+    private final ResilientRequests resilientRequests;
     private final ProduitRequest produitRequest;
     private final CommandeMapperDetailFull commandeMapperDetailFull;
     private final NotificationPublisher notificationPublisher;
 
-
-    public CommandeService(CommandeRepository commandeRepository, ClientsRequest clientsRequest, ProduitRequest produitRequest, CommandeMapperDetailFull commandeMapperDetailFull,NotificationPublisher notificationPublisher) {
+    public CommandeService(CommandeRepository commandeRepository,
+                           ResilientRequests resilientRequests,
+                           ProduitRequest produitRequest,
+                           CommandeMapperDetailFull commandeMapperDetailFull,
+                           NotificationPublisher notificationPublisher) {
         this.commandeRepository = commandeRepository;
-        this.clientsRequest = clientsRequest;
+        this.resilientRequests = resilientRequests;
         this.produitRequest = produitRequest;
         this.commandeMapperDetailFull = commandeMapperDetailFull;
         this.notificationPublisher = notificationPublisher;
@@ -45,25 +50,29 @@ public class CommandeService {
         return commandeRepository.findById(id)
                 .orElseThrow(() -> new RessourceIntrouvableException("Commande introuvable"));
     }
+
+    @RateLimiter(name = "consultation", fallbackMethod = "ConsultationLimitee")
     @Transactional(readOnly = true)
     public CommandeDtoFull getCommandeFullById(Long id) {
         Commande commande = commandeRepository.findById(id)
                 .orElseThrow(() -> new RessourceIntrouvableException("Commande introuvable"));
         CommandeDtoFull commandeDtoFull = commandeMapperDetailFull.toDto(commande);
 
-        ClientDto client = clientsRequest.getClientById(commande.getClientId());
+        ClientDto client = resilientRequests.getClientByIdFb(commande.getClientId());
         commandeDtoFull.setClientEmail(client.getEmail());
         commandeDtoFull.setClientName(client.getName());
         for (LigneCommandeDtoFull ligne : commandeDtoFull.getLignesCommande()) {
-            ProduitDto produit = produitRequest.getProduitById(ligne.getProduitId());
+            ProduitDto produit = resilientRequests.getProduitByIdFb(ligne.getProduitId());
             ligne.setProduitsku(produit.getSku());
             ligne.setProduitNom(produit.getNom());
             ligne.setProduitDescription(produit.getDescription());
         }
         return commandeDtoFull;
     }
-
-
+    public CommandeDtoFull ConsultationLimitee(Long id, RequestNotPermitted cause) {
+          Commande commande=this.getCommandeById(id);
+         return commandeMapperDetailFull.toDto(commande);
+    }
 
     @Transactional
     public Commande createCommande(Commande commande, String idempotencyKey) {
@@ -79,14 +88,14 @@ public class CommandeService {
         }
         commande.setIdempotencyKey(idempotencyKey);
 
-        ClientDto client = clientsRequest.getClientById(commande.getClientId());
+        ClientDto client = resilientRequests.getClientByIdStrict(commande.getClientId());
         if (!Integer.valueOf(1).equals(client.getEtat())) {
             throw new IllegalArgumentException("Client suspendu");
         }
         Map<Long, Integer> listeProduitIdQuantite= new HashMap<>();
         BigDecimal prixTotal = BigDecimal.ZERO;
         for (LigneCommande ligne : commande.getLignesCommande()) {
-            ProduitDto produit = produitRequest.getProduitById(ligne.getProduitId());
+            ProduitDto produit = resilientRequests.getProduitByIdStrict(ligne.getProduitId());
 
             if (produit.getQteStock().longValue() < ligne.getQuantite()) {
                 throw new IllegalArgumentException("Stock insuffisant pour le produit "+ ligne.getProduitId());
