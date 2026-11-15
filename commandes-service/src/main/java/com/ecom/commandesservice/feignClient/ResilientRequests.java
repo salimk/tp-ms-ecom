@@ -122,7 +122,7 @@ public class ResilientRequests {
         }
     }
 
-    private <T> T lireCache(String nomCache, Object cle, Class<T> type) {
+    private <X> X lireCache(String nomCache, Object cle, Class<X> type) {
         Cache cache = cacheManager.getCache(nomCache);
         return cache != null ? cache.get(cle, type) : null;
     }

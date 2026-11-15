@@ -20,7 +20,7 @@ public class NotificationConsumer{
     @RabbitListener(queues = RabbitConfig.QUEUE_EMAIL)
     public void recevoir(NotificationEmailDto notification) {
         var violations = validator.validate(notification);
-        if (!violations.isEmpty()) new ConstraintViolationException(violations);
+        if (!violations.isEmpty()) throw new ConstraintViolationException(violations);
         notificationService.envoyerEmail(notification);
     }
 }

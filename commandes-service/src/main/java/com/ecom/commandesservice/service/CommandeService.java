@@ -13,6 +13,7 @@ import com.ecom.commandesservice.messaging.NotificationPublisher;
 import com.ecom.commandesservice.repository.CommandeRepository;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
