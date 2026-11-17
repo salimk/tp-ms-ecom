@@ -2,7 +2,6 @@ package com.ecom.commandesservice.service;
 
 import com.ecom.commandesservice.dto.CommandeDtoFull;
 import com.ecom.commandesservice.dto.LigneCommandeDtoFull;
-import com.ecom.commandesservice.dto.NotificationEmailDto;
 import com.ecom.commandesservice.entite.Commande;
 import com.ecom.commandesservice.entite.LigneCommande;
 import com.ecom.commandesservice.enums.StatutCommande;
@@ -13,8 +12,6 @@ import com.ecom.commandesservice.messaging.NotificationPublisher;
 import com.ecom.commandesservice.repository.CommandeRepository;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -115,18 +112,20 @@ public class CommandeService {
         commande.setStatut(StatutCommande.EN_ATTENTE);
         Commande savedccommande=commandeRepository.save(commande);
 
-        NotificationEmailDto emailDto = new NotificationEmailDto(
-                client.getEmail(),
-                "Commande n° " + savedccommande.getId() + " enregistrée",
-                "Bonjour " + client.getName()
-                        + ", votre commande n° " + savedccommande.getId()
-                        + " a été enregistrée. Montant : "
-                        + savedccommande.getPrixTotal() + "."
-        );
-
+        // Données de notification préparées avant afterCommit (accès à client et commande sauvegardée)
+        final String emailDestinataire = client.getEmail();
+        final String emailSujet = "Commande n° " + commande.getId() + " enregistrée";
+        final String emailContenu = "Bonjour " + client.getName()
+                + ", votre commande n° " + commande.getId()
+                + " a été enregistrée. Montant : " + commande.getPrixTotal() + ".";
+        final Long commandeId = commande.getId();
+        final String correlationId = idempotencyKey;
         ReservationStockDto reservation = new ReservationStockDto(listeProduitIdQuantite);
+        // Les deux actions sont exécutées APRÈS le commit de la transaction locale.
+        //  Si Kafka (ou le service catalogue) est indisponible après le commit, l'événement est perdu. L'Outbox (V8) résoudra cette limite.
         afterCommit(() -> produitRequest.updatestock(reservation));
-        afterCommit(() -> notificationPublisher.envoyer(emailDto));
+        afterCommit(() -> notificationPublisher.envoyer(
+                commandeId, correlationId, emailDestinataire, emailSujet, emailContenu));
 
         return savedccommande;
     }
